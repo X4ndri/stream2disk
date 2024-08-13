@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'your_command=app:archx', 
+            'stream2disk=app:archx', 
         ],
     },
     description='a GUI wrapper for ffmpeg stream to disk functionality',

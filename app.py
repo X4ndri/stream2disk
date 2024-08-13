@@ -177,7 +177,7 @@ def archx():
         # Browse button
         dpg.add_button(label="Browse", callback=show_file_dialog)
 
-        with dpg.file_dialog(directory_selector=True, callback=update_directory_path, tag="file_dialog", show=False, height=vper(0.4), width=hper(0.8)):
+        with dpg.file_dialog(directory_selector=True, callback=update_directory_path, tag="file_dialog", show=False, height=vper(0.4), width=hper(0.8), default_path='/home'):
             dpg.add_file_extension(".*")
 
     # library window

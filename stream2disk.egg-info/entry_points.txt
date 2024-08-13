@@ -1,2 +1,2 @@
 [console_scripts]
-your_command = app:archx
+stream2disk = app:archx

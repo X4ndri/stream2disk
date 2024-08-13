@@ -3,6 +3,9 @@ from pathlib import Path
 import subprocess
 import threading
 import sys
+
+
+
 stop_event = threading.Event()
 
 library = {}
@@ -156,63 +159,74 @@ def start_ffmpeg_thread(link, output_path):
     threading.Thread(target=run_ffmpeg_command, args=[link, output_path], daemon=True).start()
 
 
-dpg.create_context()
-dpg.create_viewport(title='Stream2Disk', height=750, width=900)
-dpg.setup_dearpygui()
+
+def archx():
+
+    dpg.create_context()
+    dpg.create_viewport(title='Stream2Disk', height=750, width=900)
+    dpg.setup_dearpygui()
 
 
 
-# link input window
-with dpg.window(label="Stream Info", height=vper(0.1), width=hper(0.8), pos=[hper(0.1),vper(0.01)]):
-    dpg.add_input_text(label="Enter m3u8 stream", default_value="https://aa.bigtimedelivery.net/_v13/d453ac692b52eae60bea6cb749c9fe53172d2c2019e9288a5f1aee55412b4e31ccb2118ca9e7dbf2db03ef56e9ce8e9d863e126e1bb36faab28e5b4a353c4ee9cc66eeb51dc18895faa1f49d3f7c0118dc3be3b9e93cb82f859bd2d6827a350a0e7df28171542f3697a6a7c964e43188292eb9e15322a8253209e34288b093e2/playlist.m3u8", height=50, width=500, tag="link_field")
-        # Directory text field
-    dpg.add_input_text(label="Directory Path", tag="directory_text_field", width=400)
-    
-    # Browse button
-    dpg.add_button(label="Browse", callback=show_file_dialog)
+    # link input window
+    with dpg.window(label="Stream Info", height=vper(0.1), width=hper(0.8), pos=[hper(0.1),vper(0.01)]):
+        dpg.add_input_text(label="Enter m3u8 stream", default_value="playlist.m3u8", height=50, width=500, tag="link_field")
+            # Directory text field
+        dpg.add_input_text(label="Directory Path", tag="directory_text_field", width=400)
+        
+        # Browse button
+        dpg.add_button(label="Browse", callback=show_file_dialog)
 
-    with dpg.file_dialog(directory_selector=True, callback=update_directory_path, tag="file_dialog", show=False, height=vper(0.4), width=hper(0.8)):
-        dpg.add_file_extension(".*")
+        with dpg.file_dialog(directory_selector=True, callback=update_directory_path, tag="file_dialog", show=False, height=vper(0.4), width=hper(0.8)):
+            dpg.add_file_extension(".*")
 
-# library window
-with dpg.window(label='Library Parameters', tag="lib_params", height=vper(0.3), width=hper(0.4), pos=[hper(0.3),vper(0.15)], show=False):
-    dpg.add_text("seasons found in library", color=(255, 255, 255))
-    with dpg.group(horizontal=False):
-        dpg.add_spacer()
-        dpg.add_group(tag="lib_params_season_radio_buttons", horizontal=True)
-        dpg.add_spacer()
-        dpg.add_spacer(height=vper(0.04))
-        dpg.add_group(tag="lib_params_episode_params")
-        dpg.add_spacer()
-        dpg.add_spacer(height=vper(0.04))
-        dpg.add_group(tag='submit_group')
+    # library window
+    with dpg.window(label='Library Parameters', tag="lib_params", height=vper(0.3), width=hper(0.4), pos=[hper(0.3),vper(0.15)], show=False):
+        dpg.add_text("seasons found in library", color=(255, 255, 255))
+        with dpg.group(horizontal=False):
+            dpg.add_spacer()
+            dpg.add_group(tag="lib_params_season_radio_buttons", horizontal=True)
+            dpg.add_spacer()
+            dpg.add_spacer(height=vper(0.04))
+            dpg.add_group(tag="lib_params_episode_params")
+            dpg.add_spacer()
+            dpg.add_spacer(height=vper(0.04))
+            dpg.add_group(tag='submit_group')
 
-    dpg.add_input_int(
-        parent="lib_params_episode_params", 
-        label="episode counter", 
-        tag="episode_counter", 
-        default_value=0, 
-        min_value=0, 
-        max_value=500,
-        width = hper(0.09),
-        show=True
-    )
-    
-    
-    dpg.add_button(parent='submit_group', callback=stream, width=hper(0.1), label="Stream")
-    dpg.add_button(parent='submit_group', callback=stop_event.set, width=hper(0.1), label="Stop")
-
-
-# progress window
-with dpg.window(label='progress', tag="cmd", height=vper(0.5), width=hper(0.8), pos=[hper(0.1),vper(0.46)], show=True):
-    # Add a text widget to display the output
-    dpg.add_text("FFmpeg Output:")
-    
-    # Add an input text widget to display the output
-    dpg.add_input_text(tag="output_text", multiline=True, readonly=True, width=780, height=550)
+        dpg.add_input_int(
+            parent="lib_params_episode_params", 
+            label="episode counter", 
+            tag="episode_counter", 
+            default_value=0, 
+            min_value=0, 
+            max_value=500,
+            width = hper(0.09),
+            show=True
+        )
+        
+        
+        dpg.add_button(parent='submit_group', callback=stream, width=hper(0.1), label="Stream")
+        dpg.add_button(parent='submit_group', callback=stop_event.set, width=hper(0.1), label="Stop")
 
 
+    # progress window
+    with dpg.window(label='progress', tag="cmd", height=vper(0.5), width=hper(0.8), pos=[hper(0.1),vper(0.46)], show=True):
+        # Add a text widget to display the output
+        dpg.add_text("FFmpeg Output:")
+        
+        # Add an input text widget to display the output
+        dpg.add_input_text(tag="output_text", multiline=True, readonly=True, width=780, height=550)
 
+
+
+
+
+
+
+    dpg.show_viewport()
+
+    dpg.start_dearpygui()
+    dpg.destroy_context()
 
 
 def main():
@@ -232,9 +246,5 @@ def main():
     start_ffmpeg_thread(link, output_path=output_episode_path)
 
 
-# Set up viewport
-dpg.show_viewport()
-
-# Start the DearPyGui application
-dpg.start_dearpygui()
-dpg.destroy_context()
+if __name__ == "__main__":
+    archx()

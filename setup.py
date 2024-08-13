@@ -9,13 +9,12 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'your_command=your_script:main',  # Replace 'main' with the function to run
+            'your_command=app:archx', 
         ],
     },
-    description='A brief description of your project',
+    description='a GUI wrapper for ffmpeg stream to disk functionality',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    author='Your Name',
-    author_email='your.email@example.com',
-    url='https://yourprojecthomepage.com',  # Optional
+    author='Ahmad Abdal Qader',
+    url='https://qader.dev',  # Optional
 )
